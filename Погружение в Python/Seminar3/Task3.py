@@ -14,7 +14,7 @@
 import random
 
 
-def find_combinations(items: list, max_weight: int, result: list, current_combination=dict(), index=0):
+def find_combinations(items: list, max_weight: int, result: list, current_combination=None, index=0):
     """
     Считает все возможные варианты вещей
     :param items: лист кортежей вещей и их вес
@@ -23,6 +23,8 @@ def find_combinations(items: list, max_weight: int, result: list, current_combin
     :param index: индекс с какой вещи начинать
     :param result: список списков всех комбинаций
     """
+    if current_combination is None:
+        current_combination = {}
     # Проверяем, если текущая комбинация веса не превышает максимальный вес
     if sum(current_combination.values()) <= max_weight:
         result.append(list(current_combination.keys()))  # Добавляем копию текущей комбинации в результат
