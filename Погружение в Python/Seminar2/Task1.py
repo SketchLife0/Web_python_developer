@@ -8,10 +8,14 @@
 # 7. При превышении суммы в 5млн, вычитать налог на богатство 10% перед каждой операцией, даже ошибочной
 # 8. Любое действие выводит сумму денег
 
+from datetime import datetime
+
 balance = 0.0
 """Баланс клиента"""
 operation = 0
 """Счётчик операций"""
+log_operation = []
+"""Логирование операций"""
 PERCENT_DIVIDENDS = 3
 """Процент начислений"""
 MAX_OPERATION = 3
@@ -46,6 +50,18 @@ def help_operation() -> int:
         print("Неккоректный ввод!")
 
 
+def log(act: str, money: float):
+    a = {
+        'Снятие': " Были сняты средства в размере ",
+        "Начисление": " Были начислены средства в размере ",
+        "Дивиденды": " Были начислены дивиденды в размере ",
+        'Налог': " Был снят налог в размере ",
+    }
+    log_action = str(datetime.now()) + a[act] + str(money)
+    global log_operation
+    log_operation.append(log_action)
+
+
 def add():
     """Пополнить счёт"""
     bullying_rich()
@@ -55,6 +71,7 @@ def add():
     a = float(a)
     global operation, balance
     balance += round(a, 2)
+    log("Начисление", round(a, 2))
     operation += 1
     add_perceint()
     balance_correcting()
@@ -73,6 +90,7 @@ def add_perceint():
     if operation == MAX_OPERATION:
         dividends = round(balance/100 * PERCENT_DIVIDENDS, 2)
         balance += dividends
+        log("Дивиденды", dividends)
         balance_correcting()
         print(f"Начисляется процент на остаток по счёте в размере {PERCENT_DIVIDENDS}%. Это составляет {dividends}")
         operation = 0
@@ -84,6 +102,7 @@ def bullying_rich():
     if balance > RICH_LINE:
         tax = round(balance / 100 * RICH_TAX, 2)
         balance -= tax
+        log('Налог', tax)
         balance_correcting()
         print(f"Взымается налог на богатство - {RICH_TAX}%. Это составляет {tax}")
         show_money()
@@ -116,6 +135,7 @@ def drop():
     if balance > a:
         operation += 1
         balance -= round(a, 2)
+        log('Снятие', a)
         print("Деньги выданы")
         add_perceint()
         balance_correcting()
