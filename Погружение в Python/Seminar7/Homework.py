@@ -44,11 +44,9 @@ def rename(extension_old: str, extension_new="", wanted_name="", count_nums=0, b
 
     numerator = 1
     num = str(numerator)
-    if len(num) <= count_nums:
+    if len(num) < count_nums:
         for _ in range(count_nums - len(num)):
             num = "0" + num
-    else:
-        num = ""
 
     for elem in folder.iterdir():
         print(elem)
