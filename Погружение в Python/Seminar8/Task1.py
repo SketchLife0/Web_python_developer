@@ -13,28 +13,36 @@ import csv
 import pprint
 
 
-def format_adaptation(directory: str) -> list:
-    data = []
-    for dirpath, dirnames, filenames in os.walk(directory):
-        for dirname in dirnames:
-            dir_info = {
-                "name": dirname,
-                "parent": os.path.basename(dirpath),
-                "type": "directory",
-            }
-            dir_size = get_folder_size(os.path.join(dirpath, dirname))
-            dir_info["size"] = dir_size
-            data.append(dir_info)
-        for filename in filenames:
-            file_path = os.path.join(dirpath, filename)
-            file_info = {
-                "name": filename,
-                "parent": os.path.basename(dirpath),
-                "type": "file",
-                "size": os.path.getsize(file_path)
-            }
-            data.append(file_info)
-    return data
+def format_adaptation(directory: str) -> list | dict:
+    item_info = {"name": os.path.basename(directory)}
+    if os.path.isdir(directory):
+        item_info.update({"type": "directory", "size": get_folder_size(directory), "kids": []})
+        for item in os.listdir(directory):
+            item_info["kids"].append(format_adaptation(os.path.join(directory, item)))
+    else:
+        item_info.update({"type": "file", "size": os.path.getsize(directory)})
+    return item_info
+    # data = []
+    # for dirpath, dirnames, filenames in os.walk(directory):
+    #     for dirname in dirnames:
+    #         dir_info = {
+    #             "name": dirname,
+    #             "parent": os.path.basename(dirpath),
+    #             "type": "directory",
+    #         }
+    #         dir_size = get_folder_size(os.path.join(dirpath, dirname))
+    #         dir_info["size"] = dir_size
+    #         data.append(dir_info)
+    #     for filename in filenames:
+    #         file_path = os.path.join(dirpath, filename)
+    #         file_info = {
+    #             "name": filename,
+    #             "parent": os.path.basename(dirpath),
+    #             "type": "file",
+    #             "size": os.path.getsize(file_path)
+    #         }
+    #         data.append(file_info)
+    # return data
 
 
 def get_folder_size(folder_path: str) -> int:
@@ -80,6 +88,6 @@ def save_to_csv(data, filename):
 if __name__ == "__main__":
     data = format_adaptation(os.getcwd())
     pprint.pprint(data)
-    save_to_file("csv", data, "output.csv")
+    # save_to_file("csv", data, "output.csv")
     save_to_file("json", data, "output.json")
     save_to_file("pickle", data, "output.pkl")
