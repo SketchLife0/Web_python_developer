@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
     <title>Ordered Products</title>
 </head>
 
 <body>
     <h1>Ordered Products</h1>
     <ul>
-        {% for order in unique_orders %}
-        <li>{{ order.product.name }} - {{ order.order_date }}</li>
+        {% for product in unique_products %}
+        <li>{{ product.name }}</li>
         {% endfor %}
     </ul>
 </body>
