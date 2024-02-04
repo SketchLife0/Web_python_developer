@@ -8,3 +8,4 @@ class Order(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=100)
     order = models.ForeignKey(Order, related_name='products', on_delete=models.CASCADE)
+
