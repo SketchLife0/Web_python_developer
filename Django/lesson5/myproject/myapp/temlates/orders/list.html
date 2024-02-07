@@ -1,0 +1,5 @@
+<h1>Список заказов</h1>
+
+{% for order in orders %}
+<p><a href="{% url 'order_detail' order.pk %}">Заказ №{{ order.pk }}</a></p>
+{% endfor %}
